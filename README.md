@@ -3,6 +3,11 @@
 Browser-opskrifter til LinkedIn, kørt **lokalt** af [Agentics browser-tray](https://agentics.dk/products/pks-agent-browser)
 på en profil du selv har logget ind i. Intet login og ingen cookie forlader maskinen.
 
+**[Åbn opskrifterne på agentics.dk →](https://agentics.dk/browser/recipes/pksorensen/pks-browser-linkedin)** — siden læser dette repo
+direkte og viser for hver opskrift hvad trinene gør, hvilke værter den rører, og
+om den kan køre uovervåget. Alt på siden er låst til én commit, også filen du
+henter, så et push imellem ikke kan bytte opskriften ud under dig.
+
 ## Opskrifter
 
 | Fil | Hvad den gør | Profil | Status |
@@ -17,7 +22,8 @@ på en profil du selv har logget ind i. Intet login og ingen cookie forlader mas
 
 ## Installér en opskrift
 
-1. Hent filen: **[linkedin-gemte.json](https://raw.githubusercontent.com/pksorensen/pks-browser-linkedin/main/recipes/linkedin-gemte.json)** (højreklik → Gem som)
+1. Hent filen fra **[opskriftssiden](https://agentics.dk/browser/recipes/pksorensen/pks-browser-linkedin)** — tryk *Hent opskriften*.
+   (Eller direkte fra [GitHub](https://raw.githubusercontent.com/pksorensen/pks-browser-linkedin/main/recipes/linkedin-gemte.json), højreklik → Gem som.)
 2. Læg den i `%USERPROFILE%\.agentics\browser-tray\recipes\`
 3. Højreklik på tray-ikonet. Menuen bygges forfra hver gang den åbnes, så opskriften er der med det samme — ingen genstart.
 
