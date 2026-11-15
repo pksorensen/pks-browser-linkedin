@@ -40,10 +40,10 @@
           "selector": "div.msg-thread",
           "as": "hoveder",
           "append": true,
+          "stamp": { "traad": "{{tIndex}}" },
           "fields": {
             "profil": "a.msg-thread__link-to-profile @href",
-            "visitkort": "a.msg-thread__link-to-profile",
-            "urn": "[data-event-urn] @data-event-urn"
+            "visitkort": "a.msg-thread__link-to-profile"
           }
         },
 
@@ -53,6 +53,7 @@
           "selector": "li.msg-s-message-list__event",
           "as": "beskeder",
           "append": true,
+          "stamp": { "traad": "{{tIndex}}" },
           "fields": {
             "urn": "[data-event-urn] @data-event-urn",
             "afsender": ".msg-s-message-group__name",

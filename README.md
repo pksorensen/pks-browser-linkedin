@@ -92,7 +92,7 @@ Pr. besked, målt over et vindue på 20:
 
 | Felt | Udfyldt | Noter |
 | --- | --- | --- |
-| `urn` | 20/20 | `data-event-urn`. **Samtale-id'et ligger inde i URN'en**, så beskeder fra flere tråde kan ligge i én liste uden grænsemarkør. |
+| `urn` | 20/20 | `data-event-urn`, og **22 ud af 22 er forskellige** — en holdbar dedupe-nøgle. Men *ikke* en sammenføjningsnøgle, se nedenfor. |
 | `tekst` | 20/20 | |
 | `afsender` | 16/20 | |
 | `klokkeslaet` | 16/20 | 8 tegn — ingen dato |
@@ -139,11 +139,22 @@ tråd kan opdages **efter** høsten i stedet for at blive opdaget aldrig.
 
 ### Sammenføjningen
 
-`hoveder` opsamles på trådruden `div.msg-thread`, ikke på profillinket. Ruden er
-den eneste node der rummer **både** linket og beskedernes URN'er, så hver
-hovedrække bærer et `urn` med samtale-id'et i og kan sættes sammen med sine
-beskeder. Et profillink opsamlet for sig havde ingen nøgle, og i en gruppesamtale
-uden profillink ville rækken udeblive og forskyde alle senere hoveder én tråd.
+**Siden bærer ingen samtale-nøgle. Det blev målt, efter at jeg først havde
+påstået det modsatte.** Besked-URN'en ligner et par og er det — men parret er
+`(min egen postkasse, besked-id)`, ikke `(samtale, besked)`: første led er
+byte-identisk på tværs af to forskellige tråde. Og samtalens id, der står i
+URL'en, findes i **nul** attributter nogen steder på siden; det blev efterprøvet
+ved at løbe hvert attribut på hvert element igennem.
+
+Nøglen er derfor et **stempel**: `"stamp": {"traad": "{{tIndex}}"}` på både
+hovedrækken og beskedrækkerne skriver løkkens eget indeks på hver række. Den
+gælder kun inden for kørslen — hvilket er præcis rækkevidden af at sætte to
+lister fra samme kørsel sammen.
+
+`hoveder` opsamles stadig på trådruden `div.msg-thread` og ikke på profillinket:
+i en gruppesamtale uden profillink ville en rækkefølge af profillinks udeblive
+og forskyde alle senere hoveder én tråd, mens ruden altid giver præcis én
+række.
 
 Prisen er at `text` på en hovedrække er hele samtalens tekst. Læs `visitkort`
 (tre linjer: navn, headline, +grad) og `profil`, og se bort fra `text`.
