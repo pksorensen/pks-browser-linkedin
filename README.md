@@ -114,3 +114,42 @@ beskedrækken, så tidsstemplet er klokkeslæt plus en relativ dato-overskrift (
 Høsten tager det **synlige vindue** — både trådlisten og beskedlisten er
 virtualiserede. Det er med vilje for v1: kartoteket kører to gange dagligt, og
 URN-dedupe gør en gentagelse gratis.
+
+### Kapløbet efter et klik — målt, fordi det fejler med rigtige data
+
+LinkedIns beskedside er en enkeltsides-app. Et klik på en anden samtale skifter
+**ikke** URL'en synligt for en opskrift, og den forrige samtales beskedrækker
+bliver stående i DOM'en imens. Målt 15/11 ved at klikke og aflæse hvert 25. ms:
+
+```
+t=0 ms      20 rækker   (forrige tråd)
+t=0 ms      20 rækker   (synkront EFTER click — intet sker)
+t=1399 ms    7 rækker   (ny tråd)
+```
+
+**Næsten halvandet sekund.** En `assert` på beskedrækken bliver sand med det
+samme — på det gamle indhold — og høsten tager derfor den forrige tråd igen,
+med rigtige beskeder og rigtige URN'er. Intet fejler, intet ser forkert ud, og
+resultatet er at den sidste tråd aldrig bliver læst.
+
+Derfor står der et `wait` på 2500 ms efter klikket. Det er ikke dovenskab: siden
+stiller intet signal til rådighed, og et ophold er det ærlige svar. Bæltet
+ovenpå er gratis — hver besked-URN bærer sit eget samtale-id, så en forvekslet
+tråd kan opdages **efter** høsten i stedet for at blive opdaget aldrig.
+
+### Sammenføjningen
+
+`hoveder` opsamles på trådruden `div.msg-thread`, ikke på profillinket. Ruden er
+den eneste node der rummer **både** linket og beskedernes URN'er, så hver
+hovedrække bærer et `urn` med samtale-id'et i og kan sættes sammen med sine
+beskeder. Et profillink opsamlet for sig havde ingen nøgle, og i en gruppesamtale
+uden profillink ville rækken udeblive og forskyde alle senere hoveder én tråd.
+
+Prisen er at `text` på en hovedrække er hele samtalens tekst. Læs `visitkort`
+(tre linjer: navn, headline, +grad) og `profil`, og se bort fra `text`.
+
+### Den læser dine beskeder
+
+`linkedin-beskeder` klikker hver samtale op, og LinkedIn **markerer dem som
+læst** på din rigtige konto. Det er en bivirkning af den eneste vej ind, ikke en
+fejl — men det er et valg, og det skal stå her frem for at overraske.

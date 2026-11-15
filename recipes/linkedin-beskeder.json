@@ -31,16 +31,20 @@
           "selector": "li.msg-conversation-listitem .msg-conversation-listitem__link",
           "nth": "{{tIndex}}"
         },
+        { "id": "vent-swap", "do": "wait", "delayMs": 2500 },
         { "id": "vent-traad", "do": "assert", "selector": "li.msg-s-message-list__event" },
 
         {
           "id": "hoved",
           "do": "collect",
-          "selector": "a.msg-thread__link-to-profile",
+          "selector": "div.msg-thread",
           "as": "hoveder",
           "append": true,
-          "optional": true,
-          "fields": { "profil": "@href" }
+          "fields": {
+            "profil": "a.msg-thread__link-to-profile @href",
+            "visitkort": "a.msg-thread__link-to-profile",
+            "urn": "[data-event-urn] @data-event-urn"
+          }
         },
 
         {
