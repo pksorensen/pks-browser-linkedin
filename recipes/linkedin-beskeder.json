@@ -2,6 +2,7 @@
   "name": "linkedin-beskeder",
   "description": "Høster dine LinkedIn-samtaler til det personlige kartotek: én række pr. besked, med samtale-id'et indlejret i beskedens URN. Selektorerne er målt mod et levende login 15/11 — kun msg-*-klasser, fordi LinkedIn sender hashede klassenavne ved siden af dem.",
   "profile": "linkedin",
+  "hosts": ["linkedin.com"],
   "params": {
     "sidstSete": {
       "description": "Besked-URN'er kartoteket allerede har fået. Trayen fylder den fra linkedin-beskeder.seen.json og filtrerer selv — høsten her er fuld, så en tråd der får et svar bliver set igen."

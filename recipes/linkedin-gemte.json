@@ -2,6 +2,7 @@
   "name": "linkedin-gemte",
   "description": "Høster dine gemte LinkedIn-opslag. Selektoren er EFTERPRØVET 15/11 mod et levende login: `a[href*='/feed/update/']` gav 10 træffere på siden, og `[data-chameleon-result-urn]` gav de samme 10 — ét anker pr. opslag, ikke flere. Uden `key` fremdriver scrollCollect med rigtige hjulbegivenheder, hvilket er det LinkedIn reagerer på; `key: j` hører til X.",
   "profile": "linkedin",
+  "hosts": ["linkedin.com"],
   "params": {
     "sidstSete": {
       "description": "Adresser høsten allerede har set. Fyldes af trayen fra linkedin-gemte.seen.json."
