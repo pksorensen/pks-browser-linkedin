@@ -70,3 +70,47 @@ Omdirigeringen er ikke pynt: trayen er bygget som `WinExe` og har ingen konsol, 
 ## Rettelser
 
 Push til `main`. Der er ingen udgivelse at vente på: hent filen igen, eller tryk **Kør nu** på opskriftssiden — den læser `main` og er låst til den commit du ser.
+
+## Målt 15/11 mod et levende login
+
+Begge opskrifter her er efterprøvet gennem Agent Share-broen, ikke gættet. To
+ting er værd at kende, fordi de begge fejler **tavst**:
+
+**Selektér kun på `msg-*`.** LinkedIn sender hashede klassenavne ved siden af de
+semantiske (`LoFCGJDWoyvzKDjVwOwOvXAfNPYWHyPSpo`), og de skifter.
+
+**Trådlisten har flere `<li>` end kort.** Målt: 18 `li.msg-conversation-listitem`,
+men kun **10** af dem bærer `.msg-conversation-listitem__link`. De otte er
+pladsholdere. En løkke der tæller `<li>` og klikker på indeks ville derfor
+forskydes med op til otte og åbne de forkerte tråde — uden at fejle. Derfor
+peger både opsamlingen og klikket i `linkedin-beskeder` på **linket**, ikke på
+`<li>`'et.
+
+### Hvad `linkedin-beskeder` giver, og hvad den ikke giver
+
+Pr. besked, målt over et vindue på 20:
+
+| Felt | Udfyldt | Noter |
+| --- | --- | --- |
+| `urn` | 20/20 | `data-event-urn`. **Samtale-id'et ligger inde i URN'en**, så beskeder fra flere tråde kan ligge i én liste uden grænsemarkør. |
+| `tekst` | 20/20 | |
+| `afsender` | 16/20 | |
+| `klokkeslaet` | 16/20 | 8 tegn — ingen dato |
+| `dato` | 2/20 | Overskriften ligger **inde i** den første beskeds `<li>` |
+| `indgaaende` | 6/20 | `""` = udgående |
+
+De fire manglende afsendere er ikke et hul i opskriften: det er gruppefortsættelser,
+hvor LinkedIn udelader navn og klokkeslæt fordi beskeden hører til samme gruppe som
+den forrige. **Udfyldningen hører i trayen**, som læser listen i rækkefølge og bærer
+den sidst sete afsender og dato frem. Motoren forbliver deklarativ — et felt-udtræk
+pr. element kan ikke se sin forgænger. Tomme felter er derfor `""` og ikke en
+manglende nøgle: det er netop dét der skelner "ingen afsender her" fra "feltet
+findes ikke i denne høst".
+
+`occurredAt` **rekonstrueres**. Der er intet `datetime`-attribut nogen steder på
+beskedrækken, så tidsstemplet er klokkeslæt plus en relativ dato-overskrift ("I dag",
+"15. nov"). Minut-præcist i bedste fald. Lad være med at love mere.
+
+Høsten tager det **synlige vindue** — både trådlisten og beskedlisten er
+virtualiserede. Det er med vilje for v1: kartoteket kører to gange dagligt, og
+URN-dedupe gør en gentagelse gratis.

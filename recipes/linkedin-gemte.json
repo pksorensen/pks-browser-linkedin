@@ -1,16 +1,26 @@
 {
-  "name": "linkedin-gemte (UDKAST — selektoren er ikke efterprøvet)",
-  "description": "Høster dine gemte LinkedIn-opslag. Intet her er målt: ret selektoren efter hvad .result.json viser, og ret så navnet.",
+  "name": "linkedin-gemte",
+  "description": "Høster dine gemte LinkedIn-opslag. Selektoren er EFTERPRØVET 15/11 mod et levende login: `a[href*='/feed/update/']` gav 10 træffere på siden, og `[data-chameleon-result-urn]` gav de samme 10 — ét anker pr. opslag, ikke flere. Uden `key` fremdriver scrollCollect med rigtige hjulbegivenheder, hvilket er det LinkedIn reagerer på; `key: j` hører til X.",
   "profile": "linkedin",
   "params": {
     "sidstSete": {
       "description": "Adresser høsten allerede har set. Fyldes af trayen fra linkedin-gemte.seen.json."
     }
   },
-  "result": ["gemte"],
+  "result": [
+    "gemte"
+  ],
   "steps": [
-    { "id": "aabn", "do": "goto", "url": "https://www.linkedin.com/my-items/saved-posts/" },
-    { "id": "vent", "do": "assert", "selector": "a[href*='/feed/update/']" },
+    {
+      "id": "aabn",
+      "do": "goto",
+      "url": "https://www.linkedin.com/my-items/saved-posts/"
+    },
+    {
+      "id": "vent",
+      "do": "assert",
+      "selector": "a[href*='/feed/update/']"
+    },
     {
       "id": "host",
       "do": "scrollCollect",

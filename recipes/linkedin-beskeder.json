@@ -1,0 +1,64 @@
+{
+  "name": "linkedin-beskeder",
+  "description": "Høster dine LinkedIn-samtaler til det personlige kartotek: én række pr. besked, med samtale-id'et indlejret i beskedens URN. Selektorerne er målt mod et levende login 15/11 — kun msg-*-klasser, fordi LinkedIn sender hashede klassenavne ved siden af dem.",
+  "profile": "linkedin",
+  "params": {
+    "sidstSete": {
+      "description": "Besked-URN'er kartoteket allerede har fået. Trayen fylder den fra linkedin-beskeder.seen.json og filtrerer selv — høsten her er fuld, så en tråd der får et svar bliver set igen."
+    }
+  },
+  "result": ["beskeder", "hoveder"],
+  "steps": [
+    { "id": "aabn", "do": "goto", "url": "https://www.linkedin.com/messaging/" },
+    { "id": "vent", "do": "assert", "selector": "li.msg-conversation-listitem .msg-conversation-listitem__link" },
+
+    {
+      "id": "traade",
+      "do": "collect",
+      "selector": "li.msg-conversation-listitem .msg-conversation-listitem__link",
+      "as": "traade"
+    },
+
+    {
+      "id": "gennemloeb",
+      "do": "forEach",
+      "in": "traade",
+      "itemVar": "t",
+      "steps": [
+        {
+          "id": "aabn-traad",
+          "do": "click",
+          "selector": "li.msg-conversation-listitem .msg-conversation-listitem__link",
+          "nth": "{{tIndex}}"
+        },
+        { "id": "vent-traad", "do": "assert", "selector": "li.msg-s-message-list__event" },
+
+        {
+          "id": "hoved",
+          "do": "collect",
+          "selector": "a.msg-thread__link-to-profile",
+          "as": "hoveder",
+          "append": true,
+          "optional": true,
+          "fields": { "profil": "@href" }
+        },
+
+        {
+          "id": "beskeder",
+          "do": "collect",
+          "selector": "li.msg-s-message-list__event",
+          "as": "beskeder",
+          "append": true,
+          "fields": {
+            "urn": "[data-event-urn] @data-event-urn",
+            "afsender": ".msg-s-message-group__name",
+            "klokkeslaet": ".msg-s-message-group__timestamp",
+            "dato": ".msg-s-message-list__time-heading",
+            "indgaaende": ".msg-s-event-listitem--other ?",
+            "tekst": ".msg-s-event-listitem__body"
+          }
+        }
+      ]
+    }
+  ]
+}
